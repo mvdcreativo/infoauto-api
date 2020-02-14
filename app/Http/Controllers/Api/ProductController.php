@@ -1,0 +1,173 @@
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Product;
+use App\Image;
+use App\Vehicles\VehicleModel;
+use App\Vehicles\Brand;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
+
+class ProductController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index()
+    {
+        return Product::with('condition', 'user', 'brand', 'vehicle_category','vehicle_model', 'vehicle_sub_model', 'city','neighborhood', 'user', 'price_condition', 'tariff', 'images')->get();
+
+    }
+
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        $this->validate($request, [
+            'user_id' => 'required',
+            'vehicle_category_id' => 'required',
+            'brand_id' => 'required',
+            'vehicle_model_id' => 'required',
+            'year' => 'required',
+            'price' => 'required',
+            'condition' => 'required',
+            'name_concat' => 'required',
+
+        ]);
+
+        $product = new Product;
+        $product->user_id = $request->user_id;
+        $product->vehicle_category_id = $request->vehicle_category_id;
+        $product->brand_id = $request->brand_id;
+        $product->vehicle_model_id = $request->vehicle_model_id;
+        $product->vehicle_sub_model_id = $request->vehicle_sub_model_id;
+        $product->year = $request->year;
+        $product->km = $request->km;
+        $product->price = $request->price;
+        $product->condition_id = $request->condition;
+        $product->name_concat = $request->name_concat;
+        $product->currency_id = $request->currency_id;
+        $product->city_id = $request->city_id;
+        $product->neighborhood_id = $request->neighborhood_id;
+        $product->price_condition_id = $request->price_condition_id;
+        $product->tariff_id = $request->tariff_id;
+
+
+
+        $product->save();
+
+        return response()->json($product, 200);
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $product = Product::with('user', 'brand', 'vehicle_category','vehicle_model', 'vehicle_sub_model', 'attributes', 'extras', 'city', 'currency','condition', 'images' )->find($id);
+
+        if($product){
+            $model_id = $product->vehicle_model_id;
+            $model = VehicleModel::find($model_id);
+            $model->visit++;
+            $model->save();
+
+            $brand_id = $product->brand_id;
+            $brand = Brand::find($brand_id);
+            $brand->visit++;
+            $brand->save();
+
+            $product->visit++;
+            $product->save();
+        }
+
+        return response()->json($product, 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function update($id, Request $request)
+    {
+        //Front step1
+        $product = Product::with('attributes', 'extras', 'images')->find($id);
+        if ($request->vehicle_category_id) $product->vehicle_category_id = $request->vehicle_category_id;
+        if ($request->brand_id) $product->brand_id = $request->brand_id;
+        if ($request->vehicle_model_id) $product->vehicle_model_id = $request->vehicle_model_id;
+        if ($request->year) $product->year = $request->year;
+        if ($request->km) $product->km = $request->km;
+        if ($request->name_concat) $product->name_concat = $request->name_concat;
+
+        //FrontStep2
+        if ($request->attributes) $product->attributes()->sync($request->get('attributes'));
+
+        //FrontStep3
+        if ($request->extras) $product->extras()->sync($request->get('extras'));
+        if ($request->description) $product->description = $request->description;
+
+        
+        //Images
+        // $this->validate($request, [
+
+        //     'images' => 'required',
+        //     'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+
+        // ]);
+        //IMAGE
+        // return $request->file('images');
+        if($request->hasFile('images')){
+            foreach($request->file('images') as $image)
+            {
+
+                // echo $image->path();
+
+                $path = Storage::disk('public')->put('images',  $image);
+                // $product->fill(['file' => asset($path)])->save();
+                $image = new Image;
+                $image->fill(['url' => asset('storage/'.$path)])->save();
+                $image->products()->sync($id);
+                $image->save();
+                // $path = $image->getClientOriginalName();
+                // $image->move(public_path().'/images/publications/', $name);
+                // $images_name[] = $name;
+
+            }
+            $product = Product::with('attributes', 'extras', 'images')->find($id);
+            return response()->json($product, 200);
+         }
+
+
+        $product->save();
+
+        return response()->json($product, 200);
+
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Product $product)
+    {
+        //
+    }
+}
