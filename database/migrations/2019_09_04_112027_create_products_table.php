@@ -17,7 +17,7 @@ class CreateProductsTable extends Migration
             $table->bigIncrements('id');
             $table->longText('description')->nullable();
             $table->string('name_concat');
-            $table->string('url')->unique()->nullable();
+            // $table->string('url')->unique()->nullable();
             $table->float('price', 10,2)->nullable();
             $table->string('state')->default('PEN');
             $table->integer('km')->nullable()->default(0);
