@@ -39,7 +39,7 @@ class ProductController extends Controller
             'vehicle_model_id' => 'required',
             'year' => 'required',
             'price' => 'required',
-            'condition' => 'required',
+            'condition_id' => 'required',
             'name_concat' => 'required',
 
         ]);
@@ -53,7 +53,7 @@ class ProductController extends Controller
         $product->year = $request->year;
         $product->km = $request->km;
         $product->price = $request->price;
-        $product->condition_id = $request->condition;
+        $product->condition_id = $request->condition_id;
         $product->name_concat = $request->name_concat;
         $product->currency_id = $request->currency_id;
         $product->city_id = $request->city_id;
@@ -61,9 +61,10 @@ class ProductController extends Controller
         $product->price_condition_id = $request->price_condition_id;
         $product->tariff_id = $request->tariff_id;
 
-
-
         $product->save();
+
+        $brand = Brand::find($request->brand_id);
+        $brand->vehicle_categories()->sync($request->vehicle_category_id);
 
         return response()->json($product, 200);
 
@@ -107,29 +108,39 @@ class ProductController extends Controller
     public function update($id, Request $request)
     {
         //Front step1
-        $product = Product::with('attributes', 'extras', 'images')->find($id);
+        $product = Product::with('attributes', 'brand','vehicle_model', 'vehicle_sub_model','extras', 'images')->find($id);
         if ($request->vehicle_category_id) $product->vehicle_category_id = $request->vehicle_category_id;
         if ($request->brand_id) $product->brand_id = $request->brand_id;
         if ($request->vehicle_model_id) $product->vehicle_model_id = $request->vehicle_model_id;
+        if ($request->vehicle_sub_model_id) $product->vehicle_sub_model_id = $request->vehicle_sub_model_id;
         if ($request->year) $product->year = $request->year;
         if ($request->km) $product->km = $request->km;
         if ($request->name_concat) $product->name_concat = $request->name_concat;
+        if ($request->price) $product->price = $request->price;
+        if ($request->currency_id) $product->currency_id = $request->currency_id;
+        if ($request->city_id) $product->city_id = $request->city_id;
+        if ($request->neighborhood_id) $product->neighborhood_id = $request->neighborhood_id;
+        if ($request->price_condition_id) $product->price_condition_id = $request->price_condition_id;
+        if ($request->tariff_id) $product->tariff_id = $request->tariff_id;
+
+
+        // $product->url = $product->id."/".$product->brand->name."/".$product->vehicle_model->name."/".$product->vehicle_sub_model->name;
 
         //FrontStep2
-        if ($request->attributes) $product->attributes()->sync($request->get('attributes'));
+        if ($request->get('attributes')) $product->attributes()->sync($request->get('attributes'));
+        
 
         //FrontStep3
-        if ($request->extras) $product->extras()->sync($request->get('extras'));
+        if ($request->get('extras')) $product->extras()->sync($request->get('extras'));
         if ($request->description) $product->description = $request->description;
 
         
-        //Images
-        // $this->validate($request, [
+        // Images
+        $this->validate($request, [
 
-        //     'images' => 'required',
-        //     'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048000'
 
-        // ]);
+        ]);
         //IMAGE
         // return $request->file('images');
         if($request->hasFile('images')){
@@ -138,7 +149,7 @@ class ProductController extends Controller
 
                 // echo $image->path();
 
-                $path = Storage::disk('public')->put('images',  $image);
+                $path = Storage::disk('public')->put('images/publications',  $image);
                 // $product->fill(['file' => asset($path)])->save();
                 $image = new Image;
                 $image->fill(['url' => asset('storage/'.$path)])->save();

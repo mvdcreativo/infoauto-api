@@ -18,7 +18,7 @@ class DatabaseSeeder extends Seeder
             BrandSeeder::class,
             CurrencySeeder::class,
             VehicleModelsSeeder::class,
-            VehicleSubModelsSeeder::class,
+            // VehicleSubModelsSeeder::class,
             CountriesTableSeeder::class,
             StatesTableSeeder::class,
             CitiesTableSeeder::class,

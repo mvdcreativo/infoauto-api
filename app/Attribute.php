@@ -12,7 +12,7 @@ class Attribute extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'image_id','slug'
+        'name', 'image_id','slug', 'multi_option'
     ];
 
     /**

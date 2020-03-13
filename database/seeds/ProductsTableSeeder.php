@@ -12,8 +12,9 @@ class ProductsTableSeeder extends Seeder
      */
     public function run()
     {
-        $count = 5000;
-        factory(Product::class, $count)
+        $count = 10000;
+        
+        $product = factory(Product::class, $count)
             ->create()
             ->each(function(Product $product){
                 $product->extras()->sync([
@@ -30,10 +31,11 @@ class ProductsTableSeeder extends Seeder
                     rand(1,7),
                     rand(2,7)
                 ]);
-                
                 for ($i=0; $i < 10; $i++) { 
                     $product->images()->save(factory(App\Image::class)->make());
                 }
             });
+
+        
     }
 }

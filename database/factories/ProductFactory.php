@@ -15,8 +15,10 @@ $factory->define(Product::class, function (Faker $faker) {
     $model_name = $model->name;
     $brand_id = $model->brand_id;
     $brand= Brand::find($brand_id);
+
     $brand_name= $brand->name;
     $category_id= $brand->vehicle_categories[0]->id;
+
     
 
     return [
@@ -24,6 +26,7 @@ $factory->define(Product::class, function (Faker $faker) {
         'description'=> $faker->realText($maxNbChars =200),
         'price'=> $faker->randomFloat($nbMaxDecimals = 0, $min = 1000, $max = 250000),
         'state'=> $faker->randomElement(['ACT','PEN','INC','PAU',]),
+        
         'km'=> rand(10000,500000),
         'year'=> rand(1990,2019),
         'visit'=> rand(0,50),
@@ -31,7 +34,7 @@ $factory->define(Product::class, function (Faker $faker) {
         'vehicle_model_id'=> $model_id,
         'brand_id'=> $brand_id,
         'vehicle_category_id'=> $category_id,
-        'vehicle_sub_model_id'=> rand(1,12),
+        // 'vehicle_sub_model_id'=> rand(1,12),
         'city_id'=> 1,
         'neighborhood_id'=> rand(1,66),
         'user_id'=> rand(1,21),

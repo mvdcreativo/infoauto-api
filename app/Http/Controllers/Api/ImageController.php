@@ -38,7 +38,7 @@ class ImageController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(Image::find($id), 200);
     }
 
     /**
@@ -50,7 +50,10 @@ class ImageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $image = Image::find($id);
+        $image->position = $request->position;
+        $image->save();
+        return response()->json($image, 200);
     }
 
     /**
@@ -61,7 +64,7 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        $image = Image::find($id);
+        $image = Image::with('products')->find($id);
         $url_base = asset("");
         $urlImagen = str_ireplace($url_base, "", $image->url);
         // dd($urlImagen);
@@ -77,7 +80,7 @@ class ImageController extends Controller
           }
         $image->delete();
 
-        return response()->json(["data" => $image, "message" =>"deleted"]);
+        return response()->json($image, 200);
         
     }
 }

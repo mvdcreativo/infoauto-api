@@ -13,22 +13,26 @@ class TariffsTableSeeder extends Seeder
     {
         App\Tariff::create([
             'name'=> 'Gratis',
+            'title' => 'Sin Apuro',
             'price'=> 0,
             'currency_id'=> 1
         ]);
         App\Tariff::create([
-            'name'=> 'Exposición básica',
+            'name'=> 'Exposición Moderada',
+            'title' => 'Mostrarlo Más',
             'price'=> 300,
             'currency_id'=> 1
         ]);
         App\Tariff::create([
-            'name'=> 'Exposición media',
+            'name'=> 'Exposición Alta',
+            'title' => 'Cuanto antes Mejor',
             'price'=> 700,
             'currency_id'=> 1
         ]);
         App\Tariff::create([
-            'name'=> 'Exposición máxima',
-            'price'=> 1500,
+            'name'=> 'Maxima Exposició',
+            'title' => 'Urgente!',
+            'price'=> 1400,
             'currency_id'=> 1
         ]);
 

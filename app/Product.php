@@ -12,7 +12,7 @@ class Product extends Model
      * @var array
      */
     protected $fillable = [
-        'description','name_concat', 'price', 'state', 'km', 'year', 'visit'
+        'description','name_concat', 'price', 'state', 'km', 'year', 'visit', 'url'
     ];
 
     /**
@@ -79,7 +79,7 @@ class Product extends Model
 
     public function tariff()
     {
-        return $this->belongsTo(Tariff::class);
+        return $this->belongsTo(Tariff::class)->with('currency');
     }
     public function currency()
     {
@@ -98,7 +98,7 @@ class Product extends Model
 
     public function images()
     {
-        return $this->belongsToMany(Image::class);
+        return $this->belongsToMany(Image::class)->orderBy('position', 'ASC');
     }
 
 

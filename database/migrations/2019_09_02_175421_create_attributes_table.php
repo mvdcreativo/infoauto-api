@@ -19,6 +19,7 @@ class CreateAttributesTable extends Migration
             $table->string('slug');
             $table->unsignedBigInteger('image_id')->nullable();
             $table->unsignedBigInteger('attribute_id')->nullable();
+            $table->tinyInteger('multi_option')->nullable();
             $table->timestamps();
 
             $table->foreign('image_id')->references('id')->on('images')->onDelete('cascade');

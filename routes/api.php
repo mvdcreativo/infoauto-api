@@ -49,3 +49,7 @@ Route::post('search', 'Api\SearchProductController@search');
 Route::get('search/user/{id}', 'Api\SearchProductController@findByUser');
 Route::post('guia-precios', 'Api\GuiaPrecioController@precios_chart');
 
+
+///rutas DEV
+
+Route::get('genera-url', 'Dev\GeneraUrlProduct@urlProduct');
