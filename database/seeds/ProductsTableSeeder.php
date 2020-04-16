@@ -24,12 +24,22 @@ class ProductsTableSeeder extends Seeder
                 ]);
 
                 $product->attributes()->sync([
-                    rand(1,3),
-                    rand(4,5),
-                    rand(6,7),
-                    rand(3,7),
-                    rand(1,7),
-                    rand(2,7)
+                    //confort
+                    rand(5,7),
+                    rand(5,6),
+                    rand(7,10),
+                    rand(8,9),
+                    /////seguridad
+                    rand(11,16),
+                    rand(13,16),
+                    rand(11,14),
+                    rand(12,15),
+                    /////combustible
+                    rand(17,20),
+                    ///transmision
+                    rand(21,23),
+
+
                 ]);
                 for ($i=0; $i < 10; $i++) { 
                     $product->images()->save(factory(App\Image::class)->make());

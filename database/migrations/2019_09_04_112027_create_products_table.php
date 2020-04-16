@@ -33,7 +33,10 @@ class CreateProductsTable extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('price_condition_id')->nullable();
             $table->unsignedBigInteger('tariff_id')->nullable(); 
-            $table->unsignedBigInteger('currency_id')->nullable();                       
+            $table->unsignedBigInteger('currency_id')->nullable(); 
+            $table->string('cilindrada')->nullable();
+            $table->string('cv')->nullable();
+
             $table->timestamps();
 
             $table->foreign('condition_id')->references('id')->on('conditions')->onDelete('cascade');

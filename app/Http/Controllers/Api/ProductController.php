@@ -38,9 +38,7 @@ class ProductController extends Controller
             'brand_id' => 'required',
             'vehicle_model_id' => 'required',
             'year' => 'required',
-            'price' => 'required',
-            'condition_id' => 'required',
-            'name_concat' => 'required',
+   
 
         ]);
 
@@ -60,6 +58,8 @@ class ProductController extends Controller
         $product->neighborhood_id = $request->neighborhood_id;
         $product->price_condition_id = $request->price_condition_id;
         $product->tariff_id = $request->tariff_id;
+        $product->status_id = $request->status_id;
+        $product->cilindrada = $request->cilindrada;
 
         $product->save();
 
@@ -122,6 +122,8 @@ class ProductController extends Controller
         if ($request->neighborhood_id) $product->neighborhood_id = $request->neighborhood_id;
         if ($request->price_condition_id) $product->price_condition_id = $request->price_condition_id;
         if ($request->tariff_id) $product->tariff_id = $request->tariff_id;
+        if ($request->status_id) $product->status_id = $request->status_id;
+        if ($request->cilindrada) $product->cilindrada = $request->cilindrada;
 
 
         // $product->url = $product->id."/".$product->brand->name."/".$product->vehicle_model->name."/".$product->vehicle_sub_model->name;
@@ -166,6 +168,17 @@ class ProductController extends Controller
 
 
         $product->save();
+        if($product->vehicle_category_id && $product->brand_id && $product->vehicle_model_id && $product->vehicle_sub_model_id && $product->year && $product->cilindrada){
+            $product->status_id = 6;
+            $product->save();
+            if ($product->price && $product->currency_id && $product->tariff_id && $product->images) {
+                $product->status_id = 1;
+                $product->save();
+            }
+        }else{
+            $product->status_id = 5;
+            $product->save();
+        }
 
         return response()->json($product, 200);
 
@@ -177,8 +190,21 @@ class ProductController extends Controller
      * @param  \App\Product  $product
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Product $product)
+    public function destroy($id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
+        return response()->json($product, 200);    
+    }
+
+
+
+
+
+
+    public function get_plantillas()
+    {
+        $plantilla = Product::with('status')->where('status_id','6')->orWhere('status_id','7')->get();
+        return response()->json($plantilla, 200);
     }
 }

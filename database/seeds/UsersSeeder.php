@@ -34,7 +34,7 @@ class UsersSeeder extends Seeder
             'email' => 'danielmenedez82@gmail.com',
             'email_verified_at' => now(),
             'password' => bcrypt('dan23608'), // password
-            'role' => 'SADM',
+            'role' => 'USER',
             'neighborhood_id'=> 46,
             'state_id' => 10,
             'city_id' => 1,

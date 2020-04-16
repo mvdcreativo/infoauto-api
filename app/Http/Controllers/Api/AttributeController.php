@@ -15,7 +15,7 @@ class AttributeController extends Controller
      */
     public function index()
     {
-        return Attribute::where('attribute_id', null)->with('attribute', 'attributes')->get();
+        return Attribute::with('attribute', 'attributes')->get();
     }
 
     /**
@@ -66,9 +66,28 @@ class AttributeController extends Controller
      * @param  \App\Attribute  $attribute
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Attribute $attribute)
+    public function update(Request $request, $id)
     {
-        //
+
+        $name = $request->name;
+        $slug = str_slug($name);
+
+        $validateAttribute = Attribute::where('slug', $slug)->where('id', '!=', $id)->get();
+
+        // return $validateAttribute;
+
+        if(count($validateAttribute)>=1){
+            return response()->json(["message" => "Attributo ".$name." ya existe!!!"], 400);
+        }else{
+
+            $attribute = Attribute::find($id);
+            $attribute->name = $name;
+            $attribute->slug = $slug;
+            $attribute->attribute_id = $request->attribute_id;
+            $attribute->save();
+
+            return response()->json($attribute, 200);
+        }    
     }
 
     /**

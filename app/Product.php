@@ -33,6 +33,8 @@ class Product extends Model
 
     ];
 
+
+    ////RELACIONES
     public function condition()
     {
         return $this->belongsTo(Condition::class);
@@ -60,7 +62,7 @@ class Product extends Model
 
     public function city()
     {
-        return $this->belongsTo(Ubications\City::class);
+        return $this->belongsTo(Ubications\City::class)->with('state');
     }
     public function neighborhood()
     {
@@ -93,13 +95,21 @@ class Product extends Model
 
     public function attributes()
     {
-        return $this->belongsToMany(Attribute::class);
+        return $this->belongsToMany(Attribute::class)->with('attributes', 'attribute');
     }
 
     public function images()
     {
         return $this->belongsToMany(Image::class)->orderBy('position', 'ASC');
     }
+
+    public function status()
+    {
+        return $this->belongsTo('App\Status');
+    }
+
+
+    ////////////////////////////
 
 
 //SEARCHER
@@ -117,6 +127,18 @@ class Product extends Model
         if($model)
             return $query->where('vehicle_model_id', $model);
     }
+
+    public function scopeSubModel($query, $sub_model){
+        if($sub_model)
+            return $query->where('vehicle_sub_model_id', $sub_model);
+    }
+
+    public function scopeCilindrada($query, $cilindrada){
+        if($cilindrada)
+            return $query->orWhere('cilindrada', $cilindrada);
+    }
+
+
 
     public function scopePrice_min($query, $price_min){
         if($price_min){

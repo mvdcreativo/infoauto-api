@@ -38,6 +38,7 @@ Route::apiResource('city', 'Api\Ubications\CityController');
 Route::apiResource('state', 'Api\Ubications\StateController');
 Route::apiResource('neighborhood', 'Api\Ubications\NeighborhoodController');
 Route::apiResource('product', 'Api\ProductController');
+Route::get('plantillas', 'Api\ProductController@get_plantillas');
 Route::apiResource('extras', 'Api\ExtraController');
 Route::apiResource('conditions', 'Api\ConditionController');
 Route::apiResource('price-conditions', 'Api\PriceConditionController');
@@ -46,6 +47,7 @@ Route::apiResource('currency', 'Api\CurrencyController');
 Route::apiResource('attributes', 'Api\AttributeController');
 Route::apiResource('user', 'Api\UserController');
 Route::post('search', 'Api\SearchProductController@search');
+Route::post('search-plantilla', 'Api\SearchProductController@searchPlantilla');
 Route::get('search/user/{id}', 'Api\SearchProductController@findByUser');
 Route::post('guia-precios', 'Api\GuiaPrecioController@precios_chart');
 

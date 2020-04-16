@@ -66,10 +66,27 @@ class ExtraController extends Controller
      * @param  \App\Extra  $extra
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Extra $extra)
+    public function update(Request $request, $id)
     {
-        //
-    }
+
+
+        $name = $request->name;
+        $slug = str_slug($name);
+        $validateExtra = Extra::where('slug', $slug)->get();
+
+        if(count($validateExtra)>=1){
+            return response()->json(["message" => "Ctca. Extra ".$name." ya existe!!!"], 400);
+        }else{
+
+            $extra = Extra::find($id);
+            if($request->name){
+                $extra->name = $name;
+                $extra->slug = $slug;
+                $extra->save();
+            }
+
+            return response()->json($extra, 200);
+        }    }
 
     /**
      * Remove the specified resource from storage.

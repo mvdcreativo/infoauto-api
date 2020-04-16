@@ -30,9 +30,9 @@ class SearchProductController extends Controller
             $limit_page = 20;
         }
         $result= Product::with('brand', 'user', 'price_condition','vehicle_category','vehicle_model', 'vehicle_sub_model', 'attributes', 'extras', 'city','neighborhood', 'currency','condition', 'images' )
-            ->orderBy('tariff_id', 'ASC')
+            ->orderBy('tariff_id', 'DESC')
             ->orderBy('visit', 'DESC')
-            ->where('state', 'ACT')
+            // ->where('status_id', 1)
             ->categoria($cateoria)
             ->category($category)
             ->marca($marca)
@@ -56,8 +56,38 @@ class SearchProductController extends Controller
 
     public function findByUser($id){
 
-        $product = Product::with('user', 'brand','vehicle_model', 'vehicle_sub_model', 'user', 'price_condition', 'tariff', 'images')->where('user_id', $id)->get();
+        $product = Product::with('user', 'brand','status', 'vehicle_model', 'vehicle_sub_model', 'user', 'price_condition', 'currency', 'tariff', 'images')->where('user_id', $id)->get();
 
         return response()->json($product, 200);
+    }
+
+
+
+
+    public function searchPlantilla(Request $request, Product $product)
+    {
+        // return $request->all();
+        $category_id = $request->category_id;
+        $brand_id = $request->brand_id;
+        $model_id = $request->model_id;
+        $sub_model_id = $request->sub_model_id;
+        $year = $request->year;
+        $cilindrada = $request->cilindrada;
+
+ 
+
+        $result= Product::with('attributes','status' )
+            
+            ->where('status_id', 6)
+            ->brand($brand_id)
+            ->category($category_id)
+            ->model($model_id)
+            ->subModel($sub_model_id)
+            ->year($year)
+            ->cilindrada($cilindrada)
+            ->first();
+
+        // return $request->all();
+        return response()->json($result, 200);
     }
 }

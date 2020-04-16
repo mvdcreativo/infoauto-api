@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
         $this->call([
+            statuses_table_seeder::class,
             ImageSeeder::class,
             VehicleCategorySeeder::class,
             BrandSeeder::class,
@@ -30,7 +31,7 @@ class DatabaseSeeder extends Seeder
             PriceConditionTableSeeder::class,
             ConditionTableSeeder::class,
             TariffsTableSeeder::class,
-            ProductsTableSeeder::class
+            ProductsTableSeeder::class,
             ]);
 
     }

@@ -83,7 +83,7 @@ class AuthController extends Controller
     //USUARIO
     public function user(Request $request)
     {
-        // return response()->json($request->user());
-        return User::all();
+        return response()->json($request->user());
+        // return User::all();
     }
 }

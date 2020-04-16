@@ -26,7 +26,7 @@ $factory->define(Product::class, function (Faker $faker) {
         'description'=> $faker->realText($maxNbChars =200),
         'price'=> $faker->randomFloat($nbMaxDecimals = 0, $min = 1000, $max = 250000),
         'state'=> $faker->randomElement(['ACT','PEN','INC','PAU',]),
-        
+        'status_id'=> 1,
         'km'=> rand(10000,500000),
         'year'=> rand(1990,2019),
         'visit'=> rand(0,50),
